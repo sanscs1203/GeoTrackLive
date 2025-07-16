@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoTrack Live</title>
+</head>
+<body>
+    <h1>GeoTrack Live</h1>
+    
+    <div class="container">
+        <div class="data-row">
+            <span class="label">Latitud:</span>
+            <span class="value" id="latitude">0.000000</span>
+        </div>
+        
+        <div class="data-row">
+            <span class="label">Longitud:</span>
+            <span class="value" id="longitude">0.000000</span>
+        </div>
+        
+        <div class="data-row">
+            <span class="label">Altitud:</span>
+            <span class="value" id="altitude">00.00 m.s.n.m</span>
+        </div>
+        
+        <div class="data-row">
+            <span class="label">Fecha y Hora:</span>
+            <span class="value" id="datetime">2000-01-01 23:59:59</span>
+        </div>
+    </div>
+    <script>
+        function updateData(){
+            fetch('/api/location')
+                .then(responde => responde.json())
+                .then(data => {
+                    document.getElementById('latitude').textContent = data.latitude;
+                    document.getElementById('longitude').textContent = data.longitude;
+                    document.getElementById('altitude').textContent = data.altitude + ' m.s.n.m';
+                    document.getElementById('datetime').textContent = data.datetime || '2000-01-01 23:59:59';
+                })
+                .catch(error => consolte.error('Error:', error));
+        }
+
+        //Update every 1 second
+        setInterval(updateData, 1000);
+
+        //Initial load
+        updateData();
+    </script>
+</body>
+</html>
