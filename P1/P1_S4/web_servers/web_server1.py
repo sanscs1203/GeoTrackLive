@@ -51,7 +51,7 @@ def get_location():
                 'latitude': "0.000000",
                 'longitude': "0.000000",
                 'altitude': "00.00",
-                'datetime': "2000-01-01 23:59:59"
+                'datetime': "9999-12-31 23:59:59"
             }
         
         cursor.close()
@@ -66,7 +66,7 @@ def get_location():
             'latitude': "0.000000",
             'longitude': "0.000000",
             'altitude': "00.00",
-            'datetime': "2000-01-01 23:59:59"
+            'datetime': "9999-12-31 23:59:59"
         })
 
 if __name__ == '__main__':

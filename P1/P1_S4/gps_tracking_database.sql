@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS location_data (
     longitude DECIMAL(11, 8) NOT NULL,
     altitude DECIMAL(10, 2),
     timestamp DATETIME NOT NULL,
-    received_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     receiver_id INT NOT NULL, -- Identifies which receiver captured this data
     
     -- This prevents duplicate entries from replication

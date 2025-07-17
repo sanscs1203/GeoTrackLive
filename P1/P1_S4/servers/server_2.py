@@ -9,11 +9,11 @@ DB_CONFIG = {
     'database': 'gps_tracking',
     'user': 'gps_app',
     'password': 'gps_password_123',
-    'port': 3306,
+    'port': 3307,
 }
 
 # Receiver ID for the sniffer/machine
-RECEIVER_ID = 1
+RECEIVER_ID = 2
 
 def connect_to_database():
     """Create database connection"""
