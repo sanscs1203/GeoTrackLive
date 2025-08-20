@@ -55,19 +55,12 @@ class MainActivity : AppCompatActivity() {
         // Set up button click listener
         setupClickListeners()
 
-        // Check if GPS is enabled
-        if (isGPSEnabled()){
-
-            // Request permissions when app starts
-            if (!checkPermissions()) {
-                requestPermissions()
-            } else {
-                // If we already have permissions
-                startLocationTracking()
-            }
+        // Request permissions when app starts
+        if (!checkPermissions()) {
+            requestPermissions()
         } else {
-            // GPS is OFF, ask user to turn it on
-            requestGPSActivation()
+            // If we already have permissions
+            startLocationTracking()
         }
     }
 
@@ -110,7 +103,8 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("GPS Desactivado")
             .setMessage("Para usar la aplicación, es necesario activar el GPS.")
-            .setPositiveButton("Activar"){_, _ ->
+            .setPositiveButton("Activar"){dialog, _ ->
+                dialog.dismiss()
                 // Take user to GPS Settings
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
@@ -253,6 +247,7 @@ class MainActivity : AppCompatActivity() {
 
         // Format the date and time from location
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         val locationDateTime = Date(location.time)
         val formattedDateTime = dateFormat.format(locationDateTime)
 
