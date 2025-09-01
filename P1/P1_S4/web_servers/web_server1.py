@@ -48,10 +48,10 @@ def get_location():
         else:
             # Default values if no data
             data = {
-                'latitude': "0.000000",
-                'longitude': "0.000000",
-                'altitude': "00.00",
-                'datetime': "9999-12-31 23:59:59"
+                'latitude': "Esperando GPS...",
+                'longitude': "Esperando GPS...",
+                'altitude': "Esperando GPS...",
+                'datetime': "Esperando GPS..."
             }
         
         cursor.close()
@@ -63,13 +63,13 @@ def get_location():
         print(f"Database error: {e}")
         # Return default values on error
         return jsonify({
-            'latitude': "0.000000",
-            'longitude': "0.000000",
-            'altitude': "00.00",
-            'datetime': "9999-12-31 23:59:59"
+            'latitude': "Esperando GPS...",
+            'longitude': "Esperando GPS...",
+            'altitude': "Esperando GPS...",
+            'datetime': "Esperando GPS..."
         })
 
 if __name__ == '__main__':
     print("Starting Web Server 1...")
-    print("Access at: http://localhost:5001")
+    print("Access at: http://geotracklive1.ddns.net:5001")  #PONER EL DNS correspondiente
     app.run(host='0.0.0.0', port=5001, debug=True)
