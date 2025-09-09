@@ -71,5 +71,5 @@ def get_location():
 
 if __name__ == '__main__':
     print("Starting Web Server 1...")
-    print("Access at: http://geotracklive1.ddns.net:5001")  #PONER EL DNS correspondiente
+    print("Access at: [DNS]:5001")  
     app.run(host='0.0.0.0', port=5001, debug=True)
