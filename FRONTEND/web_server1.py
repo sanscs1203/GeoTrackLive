@@ -1,12 +1,12 @@
 from flask import Flask, render_template, jsonify
-import mysql.connector
+import pymysql
 from datetime import datetime
 
 app = Flask(__name__)
 
 # Databse configuration for Machine 1
 DB_CONFIG = {
-    'host': 'localhost',
+    'host': 'geotracklive-db.cav40om2if7t.us-east-1.rds.amazonaws.com',
     'database': 'gps_tracking',
     'user': 'gps_app',
     'password': 'gps_password_123',
@@ -23,7 +23,7 @@ def get_location():
     """Get latest GPS data from database"""
     try:
         # Connect to database
-        conn = mysql.connector.connect(**DB_CONFIG)
+        conn = pymysql.connect(**DB_CONFIG)
         cursor = conn.cursor()
         
         # Query for latest GPS data

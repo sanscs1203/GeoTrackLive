@@ -1,11 +1,11 @@
 import socket
 import json
-import mysql.connector
+import pymysql
 from datetime import datetime
 
 # Database configuration localhost
 DB_CONFIG = {
-    'host': 'localhost',
+    'host': '[ENDPOINT RDS]',
     'database': 'gps_tracking',
     'user': 'gps_app',
     'password': 'gps_password_123',
@@ -18,12 +18,20 @@ RECEIVER_ID = 1
 def connect_to_database():
     """Create database connection"""
     try:
-        conn = mysql.connector.connect(**DB_CONFIG)
+        conn = pymysql.connect(**DB_CONFIG)
         print("✅ Connected to database")
         return conn
     except Exception as e:
         print(f"❌ Database connection failed: {e}")
         return None
+    
+def is_connected(conn):
+    """Check if pymysql connection is alive"""
+    try:
+        conn.ping(reconnect=False)
+        return True
+    except:
+        return False  
 
 def insert_location_data(conn, gps_data):
     """Insert GPS data into location_data_table"""
@@ -54,7 +62,7 @@ def insert_location_data(conn, gps_data):
         print("  ✅ Data saved to database")
         return True
     
-    except mysql.connector.IntegrityError as e:
+    except pymysql.IntegrityError as e:
         # This handles duplicate entries (your UNIQUE constraint)
         print("  ⚠️  Duplicate entry - already in database")
         return True
@@ -85,7 +93,7 @@ try:
             print(f"  📍 Timestamp: {gps['timestamp']}")
             
             # Save to database
-            if conn and conn.is_connected():
+            if conn and is_connected(conn):
                 insert_location_data(conn, gps)
             else:
                 # Try to reconnect
