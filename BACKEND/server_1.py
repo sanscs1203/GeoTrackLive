@@ -43,14 +43,13 @@ def insert_location_data(conn, gps_data):
         
         # Insert query matching your table structure
         query = """
-        INSERT INTO location_data (latitude, longitude, altitude, timestamp, receiver_id)
-        VALUE (%s, %s, %s, %s, %s)
+        INSERT INTO location_data (latitude, longitude, timestamp, receiver_id)
+        VALUE (%s, %s, %s, %s)
         """
         
         values = (
             gps_data['latitude'],
             gps_data['longitude'],
-            gps_data['altitude'],
             timestamp,
             RECEIVER_ID
         )
@@ -89,7 +88,6 @@ try:
             # Display formatted data
             print(f"  📍 Latitude:  {gps['latitude']}")
             print(f"  📍 Longitude: {gps['longitude']}")
-            print(f"  📍 Altitude:  {gps['altitude']} m")
             print(f"  📍 Timestamp: {gps['timestamp']}")
             
             # Save to database

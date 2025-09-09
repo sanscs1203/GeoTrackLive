@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS location_data (
     id INT AUTO_INCREMENT PRIMARY KEY,
     latitude DECIMAL(10, 8) NOT NULL,
     longitude DECIMAL(11, 8) NOT NULL,
-    altitude DECIMAL(10, 2),
     timestamp DATETIME NOT NULL,
     receiver_id INT NOT NULL, -- Identifies which receiver captured this data
     

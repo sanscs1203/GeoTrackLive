@@ -18,12 +18,7 @@
             <span class="label">Longitud:</span>
             <span class="value" id="longitude">Esperando GPS...</span>
         </div>
-        
-        <div class="data-row">
-            <span class="label">Altitud:</span>
-            <span class="value" id="altitude">Esperando GPS...</span>
-        </div>
-        
+                
         <div class="data-row">
             <span class="label">Fecha y Hora:</span>
             <span class="value" id="datetime">Esperando GPS...</span>
@@ -37,7 +32,6 @@
                 .then(data => {
                     document.getElementById('latitude').textContent = data.latitude;
                     document.getElementById('longitude').textContent = data.longitude;
-                    document.getElementById('altitude').textContent = data.altitude + ' m.s.n.m';
                     document.getElementById('datetime').textContent = data.datetime || 'Esperando GPS...';
                 })
                 .catch(error => console.error('Error:', error));

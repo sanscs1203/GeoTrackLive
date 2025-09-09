@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Databse configuration for Machine 1
 DB_CONFIG = {
-    'host': 'geotracklive-db.cav40om2if7t.us-east-1.rds.amazonaws.com',
+    'host': '[ENDPOINT RDS]',
     'database': 'gps_tracking',
     'user': 'gps_app',
     'password': 'gps_password_123',
@@ -28,7 +28,7 @@ def get_location():
         
         # Query for latest GPS data
         query = """
-        SELECT latitude, longitude, altitude, timestamp 
+        SELECT latitude, longitude, timestamp 
         FROM location_data 
         ORDER BY timestamp DESC 
         LIMIT 1
@@ -42,15 +42,13 @@ def get_location():
             data = {
                 'latitude': f"{result[0]:.6f}",
                 'longitude': f"{result[1]:.6f}",
-                'altitude': f"{result[2]:.2f}",
-                'datetime': result[3].strftime('%Y-%m-%d %H:%M:%S')
+                'datetime': result[2].strftime('%Y-%m-%d %H:%M:%S')
             }
         else:
             # Default values if no data
             data = {
                 'latitude': "Esperando GPS...",
                 'longitude': "Esperando GPS...",
-                'altitude': "Esperando GPS...",
                 'datetime': "Esperando GPS..."
             }
         
@@ -65,7 +63,6 @@ def get_location():
         return jsonify({
             'latitude': "Esperando GPS...",
             'longitude': "Esperando GPS...",
-            'altitude': "Esperando GPS...",
             'datetime': "Esperando GPS..."
         })
 
