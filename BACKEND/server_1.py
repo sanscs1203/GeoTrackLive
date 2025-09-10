@@ -1,15 +1,19 @@
 import socket
 import json
 import pymysql
+import os
+from dotenv import load_dotenv
 from datetime import datetime
+
+load_dotenv()
 
 # Database configuration localhost
 DB_CONFIG = {
-    'host': '[ENDPOINT RDS]',
-    'database': 'gps_tracking',
-    'user': 'gps_app',
-    'password': 'gps_password_123',
-    'port': 3306,
+    'host': os.getenv('DB_HOST'),
+    'database': os.getenv('DB_NAME'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'port': int(os.getenv('DB_PORT', 3306))  
 }
 
 # Receiver ID for the sniffer/machine
@@ -74,7 +78,7 @@ def insert_location_data(conn, gps_data):
 conn = connect_to_database()
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(('0.0.0.0', 4665))    # Puerto que se encuentre abierto
+sock.bind(('0.0.0.0', 4665))    
 
 print("GPS Sniffer - Port 4665\n")
             

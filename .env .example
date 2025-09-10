@@ -1,0 +1,8 @@
+# .env.example
+DB_HOST=your-RDS-endpoint
+DB_NAME=gps_tracking
+DB_USER=gps_app
+DB_PASSWORD=your-db-password
+DB_PORT=3306
+DNS=your-dns-url-here
+DNS_PORT=5001
