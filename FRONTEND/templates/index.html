@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeoTrack Live</title>
+    <!-- Leaflet CSS required for map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <h1>GeoTrack Live</h1>
@@ -25,24 +27,73 @@
         </div>
     </div>
 
+    <!-- Map container -->
+    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
+        // Initialize map with world view
+        let map = L.map('map').setView([0, 0], 2);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Variables for marker and tracking
+        let marker = null;
+        let isFirstUpdate = true;
+        
         function updateData(){
             fetch('/api/location')
-                .then(responde => responde.json())
+                .then(response => response.json())
                 .then(data => {
+                    // Update text displays
                     document.getElementById('latitude').textContent = data.latitude;
                     document.getElementById('longitude').textContent = data.longitude;
                     document.getElementById('datetime').textContent = data.datetime || 'Esperando GPS...';
+                    
+                    // Check if we have valid coordinates
+                    if (data.latitude !== "Esperando GPS..." && data.longitude !== "Esperando GPS...") {
+                        const lat = parseFloat(data.latitude);
+                        const lon = parseFloat(data.longitude);
+                        
+                        // Create or update marker
+                        if (!marker) {
+                            // Create new marker
+                            marker = L.marker([lat, lon]).addTo(map);
+                        } else {
+                            // Update marker position
+                            marker.setLatLng([lat, lon]);
+                        }
+                        
+                        // Center map on first update or if marker is out of view
+                        if (isFirstUpdate) {
+                            // First location - zoom in
+                            map.setView([lat, lon], 16);
+                            isFirstUpdate = false;
+                        } else {
+                            // Check if marker is out of current view
+                            const bounds = map.getBounds();
+                            const markerLatLng = marker.getLatLng();
+                            
+                            if (!bounds.contains(markerLatLng)) {
+                                // Recenter if marker is outside visible area
+                                map.setView([lat, lon], map.getZoom());
+                            }
+                        }
+                    }
                 })
                 .catch(error => console.error('Error:', error));
         }
 
-        //Update every 1 second
+        // Update every 1 second
         setInterval(updateData, 1000);
 
-        //Initial load
+        // Initial load
         updateData();
-
     </script>
 
 </body>

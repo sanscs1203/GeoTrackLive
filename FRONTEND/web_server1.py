@@ -1,17 +1,22 @@
 from flask import Flask, render_template, jsonify
 import pymysql
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
 # Databse configuration for Machine 1
 DB_CONFIG = {
-    'host': '[ENDPOINT RDS]',
-    'database': 'gps_tracking',
-    'user': 'gps_app',
-    'password': 'gps_password_123',
-    'port': 3306
+    'host': os.getenv('DB_HOST'),
+    'database': os.getenv('DB_NAME'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'port': int(os.getenv('DB_PORT', 3306))
 }
+
 
 @app.route('/')
 def index():
@@ -68,5 +73,5 @@ def get_location():
 
 if __name__ == '__main__':
     print("Starting Web Server 1...")
-    print("Access at: [DNS]:5001")  
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    print(f"Access at: {os.getenv('DNS')}")  
+    app.run(host='0.0.0.0', port=int(os.getenv('DB_PORT', 3306)), debug=True)

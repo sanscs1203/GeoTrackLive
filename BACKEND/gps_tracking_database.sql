@@ -30,7 +30,7 @@ GRANT REPLICATION SLAVE ON *.* TO 'replication_user'@'%';
 
 -- Create application user
 -- CHANGE: On two machines, adjust the host from 'localhost' to '%' or specific IPs
-CREATE USER IF NOT EXISTS 'gps_app'@'[ENDPOINT RDS]' IDENTIFIED BY 'gps_password_123';
-GRANT ALL PRIVILEGES ON gps_tracking.* TO 'gps_app'@'[ENDPOINT RDS]';
+CREATE USER IF NOT EXISTS 'gps_app'@'__DB_HOST__' IDENTIFIED BY 'gps_password_123';
+GRANT ALL PRIVILEGES ON gps_tracking.* TO 'gps_app'@'__DB_HOST__';
 
 FLUSH PRIVILEGES;
