@@ -74,4 +74,4 @@ def get_location():
 if __name__ == '__main__':
     print("Starting Web Server 1...")
     print(f"Access at: {os.getenv('DNS')}")  
-    app.run(host='0.0.0.0', port=int(os.getenv('DB_PORT', 3306)), debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv('DNS_PORT', 5001)), debug=True)
