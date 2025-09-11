@@ -1,100 +1,151 @@
-<!DOCTYPE html>
-<html lang="es">
+
+   <!DOCTYPE html>
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeoTrack Live</title>
-    <!-- Leaflet CSS required for map -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { font-family: system-ui; }
+        .gradient-overlay {
+            background: linear-gradient(135deg, #fcfcfc, #4880f6, #6191f6, #7ba3f7, #95b5f8);
+        }
+        .dark .gradient-overlay {
+            background: linear-gradient(135deg, #1f2937, #111827, #1e293b, #111827, #1f2937);
+        }
+        .card-glassmorphism {
+            background: rgba(123, 163, 247, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(123, 163, 247, 0.2);
+        }
+        .dark .card-glassmorphism {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+        .data-value { font-family: 'Courier New', monospace; font-weight: 600; }
+        #map { height: 400px; border-radius: 1rem; margin-top: 2rem; }
+
+        .dark .text-white { color: #f9fafb; }
+        .dark .bg-white { background-color: rgba(255,255,255,0.05); }
+        .dark .bg-opacity-10 { background-color: rgba(255,255,255,0.1); }
+        .dark .opacity-50 { opacity: 0.3; }
+        .dark .opacity-70 { opacity: 0.5; }
+        .dark .opacity-80 { opacity: 0.7; }
+    </style>
 </head>
 <body>
-    <h1>GeoTrack Live</h1>
-    
-    <div class="container">
-        <div class="data-row">
-            <span class="label">Latitud:</span>
-            <span class="value" id="latitude">Esperando GPS...</span>
-        </div>
+    <!-- Change mode button -->
+    <div class="absolute top-4 right-4 z-50">
+        <button id="toggle-dark" class="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition">
+            Modo Oscuro
+        </button>
+    </div>
+
+    <div class="gradient-overlay min-h-screen flex flex-col items-center justify-center p-6">
         
-        <div class="data-row">
-            <span class="label">Longitud:</span>
-            <span class="value" id="longitude">Esperando GPS...</span>
+        <!-- Logo -->
+        <div class="flex flex-col items-center mb-12">
+            <img src="{{url_for('static', filename='images/logo-completo.png')}}" class="w-auto h-32 mb-4">
         </div>
-                
-        <div class="data-row">
-            <span class="label">Fecha y Hora:</span>
-            <span class="value" id="datetime">Esperando GPS...</span>
+
+        <!-- GPS Data -->
+        <div class="card-glassmorphism rounded-3xl p-8 w-full max-w-2xl">
+            
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-2">Coordenadas GPS</h2>
+                <div class="w-20 h-1 bg-white opacity-50 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
+                    <span class="text-white font-medium">Latitud:</span>
+                    <span class="text-white data-value text-lg" id="latitude">Esperando GPS...</span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
+                    <span class="text-white font-medium">Longitud:</span>
+                    <span class="text-white data-value text-lg" id="longitude">Esperando GPS...</span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
+                    <span class="text-white font-medium">Fecha y Hora:</span>
+                    <span class="text-white data-value text-lg" id="datetime">Esperando GPS...</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center mt-8 space-x-2">
+                <div class="w-3 h-3 bg-green-400 rounded-full pulse-animation"></div>
+                <span class="text-white opacity-80">Actualizando cada segundo</span>
+            </div>
+        </div>
+
+        <div id="map" class="w-full max-w-4xl"></div>
+
+        <div class="mt-8 text-center">
+            <p class="text-white opacity-70">Datos GPS transmitidos desde aplicación móvil</p>
         </div>
     </div>
 
-    <!-- Map container -->
-    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
-
-    <!-- Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script>
-        // Initialize map with world view
+        // Map
         let map = L.map('map').setView([0, 0], 2);
-        
-        // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
-        
-        // Variables for marker and tracking
+
         let marker = null;
         let isFirstUpdate = true;
-        
+
         function updateData(){
             fetch('/api/location')
-                .then(response => response.json())
-                .then(data => {
-                    // Update text displays
-                    document.getElementById('latitude').textContent = data.latitude;
-                    document.getElementById('longitude').textContent = data.longitude;
-                    document.getElementById('datetime').textContent = data.datetime || 'Esperando GPS...';
-                    
-                    // Check if we have valid coordinates
-                    if (data.latitude !== "Esperando GPS..." && data.longitude !== "Esperando GPS...") {
-                        const lat = parseFloat(data.latitude);
-                        const lon = parseFloat(data.longitude);
-                        
-                        // Create or update marker
-                        if (!marker) {
-                            // Create new marker
-                            marker = L.marker([lat, lon]).addTo(map);
-                        } else {
-                            // Update marker position
-                            marker.setLatLng([lat, lon]);
-                        }
-                        
-                        // Center map on first update or if marker is out of view
-                        if (isFirstUpdate) {
-                            // First location - zoom in
-                            map.setView([lat, lon], 16);
-                            isFirstUpdate = false;
-                        } else {
-                            // Check if marker is out of current view
-                            const bounds = map.getBounds();
-                            const markerLatLng = marker.getLatLng();
-                            
-                            if (!bounds.contains(markerLatLng)) {
-                                // Recenter if marker is outside visible area
-                                map.setView([lat, lon], map.getZoom());
+                .then(r=>r.json())
+                .then(data=>{
+                    document.getElementById('latitude').textContent=data.latitude||'N/A';
+                    document.getElementById('longitude').textContent=data.longitude||'N/A';
+                    document.getElementById('datetime').textContent=data.datetime||'N/A';
+
+                    if(data.latitude && data.longitude){
+                        const lat=parseFloat(data.latitude);
+                        const lon=parseFloat(data.longitude);
+                        if(!marker){ marker=L.marker([lat,lon]).addTo(map); }
+                        else { marker.setLatLng([lat,lon]); }
+
+                        if(isFirstUpdate){ map.setView([lat,lon],16); isFirstUpdate=false; }
+                        else{
+                            const bounds=map.getBounds();
+                            if(!bounds.contains(marker.getLatLng())){
+                                map.setView([lat,lon],map.getZoom());
                             }
                         }
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(e=>{
+                    console.error(e);
+                    document.getElementById('latitude').textContent='Error';
+                    document.getElementById('longitude').textContent='Error';
+                    document.getElementById('datetime').textContent='Error';
+                });
         }
 
-        // Update every 1 second
-        setInterval(updateData, 1000);
-
-        // Initial load
+        setInterval(updateData,1000);
         updateData();
-    </script>
 
+        // Dark mode button
+        const toggleBtn = document.getElementById('toggle-dark');
+        toggleBtn.addEventListener('click', ()=>{
+            document.documentElement.classList.toggle('dark');
+            if(document.documentElement.classList.contains('dark')){
+                toggleBtn.textContent=' Modo Claro';
+            }else{
+                toggleBtn.textContent=' Modo Oscuro';
+            }
+        });
+    </script>
 </body>
 </html>
