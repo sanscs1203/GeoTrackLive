@@ -21,7 +21,9 @@ DB_CONFIG = {
 @app.route('/')
 def index():
     """Serve the main HTML page"""
-    return render_template('index.html')
+    app_title = os.getenv('NAME_TAB')
+    print(app_title)
+    return render_template('index.html', page_title=app_title or 'GeoTrackLive')
 
 @app.route('/api/location')
 def get_location():
