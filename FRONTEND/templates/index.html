@@ -113,16 +113,11 @@
                     if(data.latitude && data.longitude){
                         const lat=parseFloat(data.latitude);
                         const lon=parseFloat(data.longitude);
+
                         if(!marker){ marker=L.marker([lat,lon]).addTo(map); }
                         else { marker.setLatLng([lat,lon]); }
 
-                        if(isFirstUpdate){ map.setView([lat,lon],16); isFirstUpdate=false; }
-                        else{
-                            const bounds=map.getBounds();
-                            if(!bounds.contains(marker.getLatLng())){
-                                map.setView([lat,lon],map.getZoom());
-                            }
-                        }
+                        map.setView([lat,lon], map.getZoom());
                     }
                 })
                 .catch(e=>{
