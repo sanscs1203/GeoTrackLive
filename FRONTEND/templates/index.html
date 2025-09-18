@@ -101,6 +101,9 @@
 
         let marker = null;
         let isFirstUpdate = true;
+        let locations = [];
+        let polyline = null;
+        let locationMarkers = [];
 
         function updateData(){
             fetch('/api/location')
@@ -111,13 +114,63 @@
                     document.getElementById('datetime').textContent=data.datetime||'N/A';
 
                     if(data.latitude && data.longitude){
+
                         const lat=parseFloat(data.latitude);
                         const lon=parseFloat(data.longitude);
 
-                        if(!marker){ marker=L.marker([lat,lon]).addTo(map); }
-                        else { marker.setLatLng([lat,lon]); }
+                        const isNewLocation = locations.length === 0 || 
+                            locations[locations.length - 1][0] !== lat || 
+                            locations[locations.length - 1][1] !== lon;
 
-                        map.setView([lat,lon], map.getZoom());
+                        if(isNewLocation){
+
+                            locations.push([lat, lon]);
+
+                            const locationMarker = L.circleMarker([lat, lon], {
+                                radius: 8,
+                                fillColor: "#3388ff",
+                                color: "#ffffff",
+                                weight: 2,
+                                opacity: 1,
+                                fillOpacity: 0.8
+                            }).addTo(map).bindPopup(`Ubicación ${locations.length}<br>Hora: ${data.datetime}`);
+
+                            locationMarkers.push(locationMarker);
+
+                            if(locations.length > 20){
+                                locations.shift();
+
+                                const oldMarker = locationMarkers.shift();
+                                map.removeLayer(oldMarker);
+                            }
+
+                            if(locations.length >= 2){
+                                if(polyline){
+                                    polyline.setLatLngs(locations);
+                                } else {
+                                    polyline = L.polyline(locations, {
+                                        color: 'red',
+                                        weight: 4,
+                                        opacity: 0.9,
+                                        smoothFactor: 1,
+                                        lineCap: 'round',
+                                        lineJoin: 'round'
+                                    }).addTo(map);
+                                }
+                            }
+                        }
+
+                        if(!marker){ 
+                            marker=L.marker([lat,lon]).addTo(map);
+                            if(isFirstUpdate){
+                                map.setView([lat, lon], 16);
+                                isFirstUpdate=false;
+                            }
+                        }
+                        else { 
+                            marker.setLatLng([lat,lon]);
+                            map.setView([lat,lon], map.getZoom());
+                        }
                     }
                 })
                 .catch(e=>{
