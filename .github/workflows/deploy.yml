@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to EC2s
 
 on:
   push:
@@ -12,13 +12,42 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Deploy to EC2 via SSH
+      - name: Deploy to EC2 #0
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
+          host: ${{ secrets.EC2_0_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_0_KEY }}
           script: |
             cd /home/ubuntu/GeoTrackLive
             git pull
-            # aquí puedes poner cualquier otro comando para reiniciar el servicio, etc
+
+      - name: Deploy to EC2 #1
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_1_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_1_KEY }}
+          script: |
+            cd /home/ubuntu/GeoTrackLive
+            git pull
+
+      - name: Deploy to EC2 #2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_2_KEY }}
+          script: |
+            cd /home/ubuntu/GeoTrackLive
+            git pull
+
+      - name: Deploy to EC2 #3
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_3_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_3_KEY }}
+          script: |
+            cd /home/ubuntu/GeoTrackLive
+            git pull
