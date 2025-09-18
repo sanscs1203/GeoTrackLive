@@ -22,26 +22,6 @@ jobs:
             cd /home/ubuntu/GeoTrackLive
             git pull
 
-      - name: Deploy to EC2 #1
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.EC2_1_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_1_KEY }}
-          script: |
-            cd /home/ubuntu/GeoTrackLive
-            git pull
-
-      - name: Deploy to EC2 #2
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.EC2_2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_2_KEY }}
-          script: |
-            cd /home/ubuntu/GeoTrackLive
-            git pull
-
       - name: Deploy to EC2 #3
         uses: appleboy/ssh-action@v0.1.10
         with:
