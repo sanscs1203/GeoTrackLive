@@ -20,6 +20,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /ruta/a/tu/proyecto
+            cd /home/ubuntu/GeoTrackLive
             git pull
-            # sudo systemctl restart tu-servicio
