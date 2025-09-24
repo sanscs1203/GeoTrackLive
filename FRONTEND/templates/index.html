@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
@@ -38,6 +37,25 @@
         .dark .opacity-50 { opacity: 0.3; }
         .dark .opacity-70 { opacity: 0.5; }
         .dark .opacity-80 { opacity: 0.7; }
+        
+        /* Style date inputs */
+        input[type="datetime-local"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        
+        .dark input[type="datetime-local"] {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -55,145 +73,80 @@
             <img src="{{url_for('static', filename='images/logo-completo.png')}}" class="w-auto h-32 mb-4">
         </div>
 
-        <!-- GPS Data -->
-        <div class="card-glassmorphism rounded-3xl p-8 w-full max-w-2xl">
-            
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-semibold text-white mb-2">Coordenadas GPS</h2>
-                <div class="w-20 h-1 bg-white opacity-50 mx-auto rounded-full"></div>
+        <div class="flex flex-col lg:flex-row gap-6 w-full max-w-6xl">
+            <!-- GPS Data Panel -->
+            <div class="card-glassmorphism rounded-3xl p-8 flex-1">
+                
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-semibold text-white mb-2">Coordenadas GPS</h2>
+                    <div class="w-20 h-1 bg-white opacity-50 mx-auto rounded-full"></div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
+                        <span class="text-white font-medium">Latitud:</span>
+                        <span class="text-white data-value text-lg" id="latitude">Esperando GPS...</span>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
+                        <span class="text-white font-medium">Longitud:</span>
+                        <span class="text-white data-value text-lg" id="longitude">Esperando GPS...</span>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
+                        <span class="text-white font-medium">Fecha y Hora:</span>
+                        <span class="text-white data-value text-lg" id="datetime">Esperando GPS...</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center mt-8 space-x-2" id="live-indicator">
+                    <div class="w-3 h-3 bg-green-400 rounded-full pulse-animation"></div>
+                    <span class="text-white opacity-80">Actualizando cada segundo</span>
+                </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
-                    <span class="text-white font-medium">Latitud:</span>
-                    <span class="text-white data-value text-lg" id="latitude">Esperando GPS...</span>
+            <!-- Time Range Panel -->
+            <div class="card-glassmorphism rounded-3xl p-8 flex-1">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-semibold text-white mb-2">Control de Tiempo</h2>
+                    <div class="w-20 h-1 bg-white opacity-50 mx-auto rounded-full"></div>
                 </div>
-                <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
-                    <span class="text-white font-medium">Longitud:</span>
-                    <span class="text-white data-value text-lg" id="longitude">Esperando GPS...</span>
-                </div>
-                <div class="flex items-center justify-between p-4 bg-white bg-opacity-10 rounded-xl">
-                    <span class="text-white font-medium">Fecha y Hora:</span>
-                    <span class="text-white data-value text-lg" id="datetime">Esperando GPS...</span>
-                </div>
-            </div>
 
-            <div class="flex items-center justify-center mt-8 space-x-2">
-                <div class="w-3 h-3 bg-green-400 rounded-full pulse-animation"></div>
-                <span class="text-white opacity-80">Actualizando cada segundo</span>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-white mb-2 font-medium">Fecha/Hora Inicial:</label>
+                        <input type="datetime-local" id="start-datetime" class="w-full">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white mb-2 font-medium">Fecha/Hora Final:</label>
+                        <input type="datetime-local" id="end-datetime" class="w-full">
+                    </div>
+
+                    <div class="flex flex-col gap-4 mt-6">
+                        <button id="show-history" class="w-full px-4 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition">
+                            📊 Mostrar Tiempo Seleccionado
+                        </button>
+                        
+                        <button id="show-live" class="w-full px-4 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition">
+                            🔴 Mostrar Historial en Vivo
+                        </button>
+                    </div>
+                    
+                    <div id="mode-indicator" class="text-center mt-4">
+                        <span class="text-white opacity-80 font-medium">Modo: <span id="current-mode" class="text-green-400">En Vivo</span></span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="map" class="w-full max-w-4xl"></div>
+        <div id="map" class="w-full max-w-6xl"></div>
 
         <div class="mt-8 text-center">
             <p class="text-white opacity-70">Datos GPS transmitidos desde aplicación móvil</p>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Map
-        let map = L.map('map').setView([0, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        let marker = null;
-        let isFirstUpdate = true;
-        let locations = [];
-        let polyline = null;
-        let locationMarkers = [];
-
-        function updateData(){
-            fetch('/api/location')
-                .then(r=>r.json())
-                .then(data=>{
-                    document.getElementById('latitude').textContent=data.latitude||'N/A';
-                    document.getElementById('longitude').textContent=data.longitude||'N/A';
-                    document.getElementById('datetime').textContent=data.datetime||'N/A';
-
-                    if(data.latitude && data.longitude){
-
-                        const lat=parseFloat(data.latitude);
-                        const lon=parseFloat(data.longitude);
-
-                        const isNewLocation = locations.length === 0 || 
-                            locations[locations.length - 1][0] !== lat || 
-                            locations[locations.length - 1][1] !== lon;
-
-                        if(isNewLocation){
-
-                            locations.push([lat, lon]);
-
-                            const locationMarker = L.circleMarker([lat, lon], {
-                                radius: 8,
-                                fillColor: "#3388ff",
-                                color: "#ffffff",
-                                weight: 2,
-                                opacity: 1,
-                                fillOpacity: 0.8
-                            }).addTo(map).bindPopup(`Ubicación ${locations.length}<br>Hora: ${data.datetime}`);
-
-                            locationMarkers.push(locationMarker);
-
-                            if(locations.length > 20){
-                                locations.shift();
-
-                                const oldMarker = locationMarkers.shift();
-                                map.removeLayer(oldMarker);
-                            }
-
-                            if(locations.length >= 2){
-                                if(polyline){
-                                    polyline.setLatLngs(locations);
-                                } else {
-                                    polyline = L.polyline(locations, {
-                                        color: 'red',
-                                        weight: 4,
-                                        opacity: 0.9,
-                                        smoothFactor: 1,
-                                        lineCap: 'round',
-                                        lineJoin: 'round'
-                                    }).addTo(map);
-                                }
-                            }
-                        }
-
-                        if(!marker){ 
-                            marker=L.marker([lat,lon]).addTo(map);
-                            if(isFirstUpdate){
-                                map.setView([lat, lon], 16);
-                                isFirstUpdate=false;
-                            }
-                        }
-                        else { 
-                            marker.setLatLng([lat,lon]);
-                            map.setView([lat,lon], map.getZoom());
-                        }
-                    }
-                })
-                .catch(e=>{
-                    console.error(e);
-                    document.getElementById('latitude').textContent='Error';
-                    document.getElementById('longitude').textContent='Error';
-                    document.getElementById('datetime').textContent='Error';
-                });
-        }
-
-        setInterval(updateData,1000);
-        updateData();
-
-        // Dark mode button
-        const toggleBtn = document.getElementById('toggle-dark');
-        toggleBtn.addEventListener('click', ()=>{
-            document.documentElement.classList.toggle('dark');
-            if(document.documentElement.classList.contains('dark')){
-                toggleBtn.textContent=' Modo Claro';
-            }else{
-                toggleBtn.textContent=' Modo Oscuro';
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/gps-tracker.js') }}"></script>
 </body>
 </html>
