@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Deploy to EC2 #0
+      - name: Deploy to EC2_0 #0
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_0_HOST }}
@@ -24,7 +24,7 @@ jobs:
             git checkout main
             git pull origin main
 
-      - name: Deploy  to EC2 #1
+      - name: Deploy  to EC2_1 #1
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_1_HOST }}
@@ -36,7 +36,7 @@ jobs:
             git checkout main
             git pull origin main
 
-      - name: Deploy  to EC2 #2
+      - name: Deploy  to EC2_2 #2
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_2_HOST }}
@@ -48,7 +48,7 @@ jobs:
             git checkout main
             git pull origin main
 
-      - name: Deploy to EC2 #3
+      - name: Deploy to EC2_3 #3
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_3_HOST }}
