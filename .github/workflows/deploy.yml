@@ -23,7 +23,7 @@ jobs:
             git pull
 
       - name: Deploy  to EC2 #1
-        uses: appleboy/ssh-actions@v0.1.10
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_1_HOST }}
           username: ubuntu
@@ -33,7 +33,7 @@ jobs:
             git pull
 
       - name: Deploy  to EC2 #2
-        uses: appleboy/ssh-actions@v0.1.10
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_2_HOST }}
           username: ubuntu
