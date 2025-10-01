@@ -20,7 +20,9 @@ jobs:
           key: ${{ secrets.EC2_0_KEY }}
           script: |
             cd /home/ubuntu/GeoTrackLive
-            git pull
+            git fetch origin
+            git checkout main
+            git pull origin main
 
       - name: Deploy  to EC2 #1
         uses: appleboy/ssh-action@v0.1.10
@@ -30,7 +32,9 @@ jobs:
           key: ${{ secrets.EC2_1_KEY }}
           script: |
             cd /home/ubuntu/GeoTrackLive
-            git pull
+            git fetch origin
+            git checkout main
+            git pull origin main
 
       - name: Deploy  to EC2 #2
         uses: appleboy/ssh-action@v0.1.10
@@ -40,7 +44,9 @@ jobs:
           key: ${{ secrets.EC2_2_KEY }}
           script: |
             cd /home/ubuntu/GeoTrackLive
-            git pull
+            git fetch origin
+            git checkout main
+            git pull origin main
 
       - name: Deploy to EC2 #3
         uses: appleboy/ssh-action@v0.1.10
@@ -50,4 +56,6 @@ jobs:
           key: ${{ secrets.EC2_3_KEY }}
           script: |
             cd /home/ubuntu/GeoTrackLive
-            git pull
+            git fetch origin
+            git checkout main
+            git pull origin main
