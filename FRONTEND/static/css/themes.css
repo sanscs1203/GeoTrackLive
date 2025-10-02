@@ -1,0 +1,217 @@
+/* ==========================================================================
+   Theme Styles - Dark Mode and Light Mode
+   ========================================================================== */
+
+/* ==========================================================================
+   Dark Mode (Default)
+   ========================================================================== */
+
+/* Background */
+.gradient-overlay {
+  background: linear-gradient(135deg, #1f2937, #111827, #1e293b, #111827, #1f2937);
+  min-height: 100vh;
+  transition: background var(--transition-slow);
+}
+
+/* Cards */
+.card-glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Text */
+.text-white {
+  color: var(--gray-50);
+}
+
+/* Data rows */
+.bg-white.bg-opacity-10,
+.data-row {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Inputs */
+input[type="datetime-local"] {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+input[type="datetime-local"]:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(72, 128, 246, 0.2);
+}
+
+/* Map shadow */
+#map {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Indicators */
+#live-indicator span {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pulse-dot {
+  background-color: #10b981;
+}
+
+#current-mode {
+  color: #10b981;
+}
+
+/* Footer text */
+.text-white.opacity-70 {
+  opacity: 0.7;
+}
+
+.text-white.opacity-50 {
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   Light Mode
+   ========================================================================== */
+
+/* Background */
+.light .gradient-overlay {
+    background: linear-gradient(135deg, #fcfcfc, #4880f6, #6191f6, #7ba3f7, #95b5f8);
+}
+
+/* Cards */
+.light .card-glassmorphism {
+  background: white;
+  backdrop-filter: none;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 
+              0 10px 40px rgba(72, 128, 246, 0.08);
+}
+
+.light .card-glassmorphism:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 
+              0 20px 50px rgba(72, 128, 246, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Text colors */
+.light .text-white,
+.light h1, .light h2, .light h3, .light h4, .light h5, .light h6,
+.light p, .light span, .light label {
+  color: var(--gray-800) !important;
+}
+
+/* Data rows */
+.light .bg-white.bg-opacity-10,
+.light .data-row {
+  background-color: var(--gray-100);
+  border: 1px solid var(--gray-200);
+}
+
+.light .data-row:hover {
+  background-color: #f0f4ff;
+  border-color: #c7d2fe;
+}
+
+/* Data values */
+.light .data-value {
+  color: var(--brand-primary) !important;
+  font-weight: 700;
+}
+
+/* Divider */
+.light .bg-white.opacity-50 {
+  background-color: var(--brand-primary) !important;
+  opacity: 0.3 !important;
+}
+
+/* Inputs */
+.light input[type="datetime-local"] {
+  background: white;
+  border: 1px solid var(--gray-300);
+  color: var(--gray-800);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.light input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: none;
+}
+
+.light input[type="datetime-local"]:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(72, 128, 246, 0.1);
+}
+
+/* Buttons - Light Mode Specific */
+.light #show-history {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  color: white;
+}
+
+.light #show-history:hover {
+  background: linear-gradient(135deg, #3a6fe5, var(--brand-primary));
+}
+
+.light #show-live {
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+  color: var(--brand-primary);
+  border: 1px solid #a5b4fc;
+}
+
+.light #show-live:hover {
+  background: linear-gradient(135deg, #c7d2fe, #a5b4fc);
+  color: #3a6fe5;
+}
+
+/* Toggle button - Light Mode */
+.light #toggle-dark {
+  background: linear-gradient(135deg, var(--gray-800), var(--gray-700));
+  box-shadow: 0 2px 10px rgba(31, 41, 55, 0.2);
+}
+
+.light #toggle-dark:hover {
+  background: linear-gradient(135deg, var(--gray-700), var(--gray-600));
+  box-shadow: 0 4px 15px rgba(31, 41, 55, 0.3);
+}
+
+/* Map - Light Mode */
+.light #map {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Indicators - Light Mode */
+.light #live-indicator span {
+  color: var(--gray-500) !important;
+}
+
+.light .pulse-dot {
+  background-color: var(--brand-primary);
+}
+
+.light #current-mode {
+  color: var(--brand-primary) !important;
+}
+
+/* Footer text - Light Mode */
+.light .text-white.opacity-70,
+.light .text-white.opacity-50 {
+  color: var(--gray-600) !important;
+  opacity: 1 !important;
+}
+
+/* Opacity utilities override for light mode */
+.light .opacity-50 {
+  opacity: 0.5 !important;
+}
+
+.light .opacity-70 {
+  opacity: 0.7 !important;
+}
+
+.light .opacity-80 {
+  opacity: 0.8 !important;
+}
