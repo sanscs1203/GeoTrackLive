@@ -38,7 +38,7 @@ function setDefaultDates() {
 // Update date/hour limits
 function updateDateTimeLimits(){
     const now = new Date ();
-    now.setMinutes(now.getMinutes - now.getTimezoneOffset());
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     const maxDateTime = now.toISOString().slice(0, 16);
 
     document.getElementById('start-datetime').max = maxDateTime;
@@ -268,22 +268,55 @@ function switchToLiveMode() {
 
 // Toggle dark mode
 function toggleDarkMode() {
-    document.documentElement.classList.toggle('dark');
+    const htmlElement = document.documentElement;
     const toggleBtn = document.getElementById('toggle-dark');
-    if (document.documentElement.classList.contains('dark')) {
-        toggleBtn.textContent = 'Modo Claro';
-    } else {
+    
+    if (htmlElement.classList.contains('dark')) {
+        // Switch to light mode
+        htmlElement.classList.remove('dark');
+        htmlElement.classList.add('light');
         toggleBtn.textContent = 'Modo Oscuro';
+        localStorage.setItem('theme', 'light');
+    } else {
+        // Switch to dark mode
+        htmlElement.classList.remove('light');
+        htmlElement.classList.add('dark');
+        toggleBtn.textContent = 'Modo Claro';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Initialize theme
+function initializeTheme() {
+    const htmlElement = document.documentElement;
+    const toggleBtn = document.getElementById('toggle-dark');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    
+    // Remove any existing theme classes first
+    htmlElement.classList.remove('light', 'dark');
+    
+    if (savedTheme === 'light') {
+        htmlElement.classList.add('light');
+        toggleBtn.textContent = 'Modo Oscuro';
+    } else {
+        htmlElement.classList.add('dark');
+        toggleBtn.textContent = 'Modo Claro';
     }
 }
 
 // Initialize when the DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize theme FIRST
+    initializeTheme();
+    
     // Initialize the map
     initMap();
     
-    // Set default date
+    // Set default dates
     setDefaultDates();
+    
+    // Set up date validations
+    setupDateValidations();
     
     // Event listeners
     document.getElementById('show-history').addEventListener('click', switchToHistoryMode);
@@ -292,4 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize live mode
     switchToLiveMode();
+    
+    // Update date limits every minute
+    setInterval(updateDateTimeLimits, 60000);
 });
